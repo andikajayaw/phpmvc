@@ -21,28 +21,27 @@ class MahasiswaModel {
     //         "jurusan" => "Sistem Komputer"
     //     ],
     // ];
-
-    private $dbh;
-    private $stmt;
+    private $table = 'mahasiswa';
+    private $db;
 
     public function __construct()
     {
-        // data source name
-        $dsn = 'mysql:host=localhost;dbname=phpmvc';
-
-        try {
-            $this->dbh = new PDO($dsn, 'root', '');
-        } catch(PDOException $e) {
-            die($e);
-        }
+        $this->db = new Database;
     }
 
     public function getAllMahasiswa() {
-        // return $this->mhs;
-        $query = "SELECT * FROM mahasiswa";
-        $this->stmt = $this->dbh->prepare($query);
-        $this->stmt->execute();
 
-        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM ".$this->table;
+        $this->db->query($query);
+        return $this->db->resultSet();
+    }
+
+    public function getDetailMahasiswa($id) {
+
+        $query = "SELECT * FROM ".$this->table ." WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind('id', $id);
+        return $this->db->single();
+        // return $this->db->resultSet();
     }
 }
